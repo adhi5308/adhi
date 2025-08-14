@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Feedback - Uzhavar 2 Unavu</title>
+<link rel="icon" type="image/x-icon" href="images/Farm 2.png">
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    header, footer {
+        background-color: green;
+        color: white;
+        text-align: center;
+        padding: 15px;
+    }
+    .menu-toggle {
+        font-size: 24px;
+        cursor: pointer;
+        position: absolute;
+        left: 15px;
+        top: 15px;
+    }
+    #sidebar {
+        position: fixed;
+        left: -200px;
+        top: 0;
+        height: 100%;
+        width: 200px;
+        background-color: #e6ffe6;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        transition: left 0.3s ease;
+        padding-top: 60px;
+        z-index: 1000;
+    }
+    #sidebar nav {
+        display: flex;
+        flex-direction: column;
+    }
+    #sidebar nav a {
+        padding: 15px;
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+        border-left: 4px solid transparent;
+    }
+    #sidebar nav a:hover {
+        background-color: #d1ffd1;
+    }
+    #sidebar nav a.active {
+        background-color: #c1f0c1;
+        border-left: 4px solid green;
+    }
+    #sidebar.open { left: 0; }
+    main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+    form {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        width: 100%;
+        max-width: 400px;
+    }
+    form input, form textarea {
+        width: 100%;
+        padding: 8px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    form button {
+        background: green;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+    }
+    form button:hover {
+        background: darkgreen;
+    }
+</style>
+</head>
+<body>
+<header>
+    <span class="menu-toggle" onclick="toggleSidebar()">&#9776;</span>
+    <h1>Uzhavar 2 Unavu</h1>
+</header>
+
+<aside id="sidebar">
+    <a href="index.html">
+        <img src="images/Farm.png" style="border-radius: 100%; width: 50px; height: 50px; margin-top: -50px;">
+    </a>
+    <hr style="border-top: 4px solid green;">
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="product.html">Products</a>
+        <a href="cart.html">Cart</a>
+        <a href="feedback.html" class="active">Feedback</a>
+        <a href="#" onclick="logoutUser()">Logout</a>
+    </nav>
+</aside>
+
+<main>
+    <form onsubmit="submitFeedback(event)">
+        <h2>We value your feedback!</h2>
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Your Email" required>
+        <textarea id="message" placeholder="Your Feedback" rows="5" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+</main>
+
+<footer>
+    &copy; 2025 Uzhavar 2 Unavu
+</footer>
+
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+}
+
+function logoutUser() {
+    if (confirm("Are you sure you want to log out?")) {
+        localStorage.removeItem("loggedInUser");
+        alert("You have been logged out.");
+        window.location.href = "index.html";
+    }
+}
+
+function submitFeedback(e) {
+    e.preventDefault();
+    let name = document.getElementById("name").value.trim();
+    let email = document.getElementById("email").value.trim();
+    let message = document.getElementById("message").value.trim();
+
+    if(name && email && message) {
+        alert("Thank you for your feedback, " + name + "!");
+        document.querySelector("form").reset();
+    } else {
+        alert("Please fill all fields.");
+    }
+}
+</script>
+</body>
+</html>

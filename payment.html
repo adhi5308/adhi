@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+  h1, h2 { color: green; }
+  .cart-summary, .payment-option, .qr-section {
+    background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;
+  }
+  .cart-item { display: flex; align-items: center; margin-bottom: 10px; }
+  .cart-item img { width: 60px; height: 60px; margin-right: 10px; border-radius: 5px; }
+  label { display: block; margin-bottom: 8px; font-weight: bold; }
+  input[type="radio"] { margin-right: 10px; }
+  button { background: green; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-right: 10px; }
+  button:hover { background: darkgreen; }
+  .cancel-btn { background: red; }
+  .cancel-btn:hover { background: darkred; }
+  #qrcode { text-align: center; padding: 20px; }
+</style>
+</head>
+<body>
+
+<h1>Payment Options</h1>
+
+<div class="cart-summary" id="cartSummary">
+  <h2>Your Order</h2>
+</div>
+
+<div class="payment-option">
+  <label><input type="radio" name="payment" value="upi"> UPI (Google Pay, PhonePe, Paytm)</label>
+  <label><input type="radio" name="payment" value="netbanking"> Net Banking</label>
+  <label><input type="radio" name="payment" value="card"> Credit / Debit Card</label>
+  <label><input type="radio" name="payment" value="cod"> Cash on Delivery</label>
+</div>
+
+<button id="proceedBtn" onclick="placeOrder()">Proceed to Pay</button>
+<button class="cancel-btn" onclick="cancelOrder()">Cancel Order</button>
+
+<div class="qr-section" id="qrSection" style="display:none;">
+  <h2>Scan to Pay</h2>
+  <div id="qrcode"></div>
+</div>
+
+<!-- QRCode.js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+  if (!localStorage.getItem("loggedInUser")) {
+  alert("Please login to proceed with payment.");
+  window.location.href = "index.html";
+}
+
+let stepUPI = false; // Track if we are in UPI payment confirmation step
+
+function loadCartSummary() {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  let summary = document.getElementById('cartSummary');
+
+  if (cart.length === 0) {
+    summary.innerHTML += "<p>Your cart is empty.</p>";
+    return;
+  }
+
+  let total = 0;
+  cart.forEach(item => {
+    let price = parseFloat(item.price) || 0;
+    let qty = parseInt(item.qty) || 1;
+    total += price * qty;
+
+    summary.innerHTML += `
+      <div class="cart-item">
+        <img src="${item.image}" alt="${item.name}">
+        <div>
+          <strong>${item.name}</strong><br>
+          Qty: ${qty} × ₹${price.toFixed(2)}
+        </div>
+      </div>
+    `;
+  });
+
+  summary.innerHTML += `<h3>Total: ₹${total.toFixed(2)}</h3>`;
+}
+
+function placeOrder() {
+  let paymentMethod = document.querySelector('input[name="payment"]:checked');
+  if (!paymentMethod) {
+    alert("Please select a payment method.");
+    return; 
+
+  }
+
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  let total = cart.reduce((sum, item) => {
+    return sum + (parseFloat(item.price) || 0) * (parseInt(item.qty) || 1);
+  }, 0);
+
+  if (paymentMethod.value === "upi") {
+    if (!stepUPI) {
+      if (total <= 0) {
+        alert("Cart is empty or total is invalid.");
+        return;
+      }
+      // Replace merchant@upi with your actual UPI ID
+      let upiLink = `upi://pay?pa=9095367000@fam&pn=Uzhavar%202%20Unavu&am=${total.toFixed(2)}&cu=INR`;
+      document.getElementById("qrSection").style.display = "block";
+      document.getElementById("qrcode").innerHTML = "";
+      new QRCode(document.getElementById("qrcode"), upiLink);
+      document.getElementById("proceedBtn").textContent = "Confirm Payment";
+      stepUPI = true;
+    } else {
+      alert("Payment confirmed! Order placed successfully.");
+      localStorage.removeItem('cart');
+      window.location.href = "index.html";
+    }
+  } else {
+    alert(`Order placed successfully! Payment method: ${paymentMethod.value.toUpperCase()}`);
+    localStorage.removeItem('cart');
+    window.location.href = "index.html";
+  }
+
+  let loggedInUser = localStorage.getItem("loggedInUser");
+if (loggedInUser) {
+    let ordersKey = "orders_" + loggedInUser;
+    let existingOrders = JSON.parse(localStorage.getItem(ordersKey)) || [];
+
+    // Save the current order
+    existingOrders.push({
+        items: cart,
+        total: total,
+        date: new Date().toLocaleString()
+    });
+
+    localStorage.setItem(ordersKey, JSON.stringify(existingOrders));
+}
+
+}
+
+function cancelOrder() {
+  if (confirm("Are you sure you want to cancel the order?")) {
+    localStorage.removeItem('cart');
+    document.getElementById("qrSection").style.display = "none";
+    document.getElementById("qrcode").innerHTML = "";
+    stepUPI = false;
+    document.getElementById("proceedBtn").textContent = "Proceed to Pay";
+    alert("Order has been cancelled.");
+    window.location.href = "index.html";
+  }
+}
+
+loadCartSummary();
+</script>
+
+</body>
+</html>

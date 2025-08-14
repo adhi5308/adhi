@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile - Uzhavar 2 Unavu</title>
+<link rel="icon" type="image/x-icon" href="images/Farm 2.png">
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    header, footer {
+        background-color: green;
+        color: white;
+        text-align: center;
+        padding: 15px;
+    }
+    .menu-toggle {
+        font-size: 24px;
+        cursor: pointer;
+        position: absolute;
+        left: 15px;
+        top: 15px;
+    }
+    #sidebar {
+        position: fixed;
+        left: -200px;
+        top: 0;
+        height: 100%;
+        width: 200px;
+        background-color: #e6ffe6;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        transition: left 0.3s ease;
+        padding-top: 60px;
+        z-index: 1000;
+    }
+    #sidebar nav {
+        display: flex;
+        flex-direction: column;
+    }
+    #sidebar nav a {
+        padding: 15px;
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+        border-left: 4px solid transparent;
+    }
+    #sidebar nav a:hover {
+        background-color: #d1ffd1;
+    }
+    #sidebar nav a.active {
+        background-color: #c1f0c1;
+        border-left: 4px solid green;
+    }
+    #sidebar.open { left: 0; }
+    main {
+        flex: 1;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .profile-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+    }
+    .profile-card h2 {
+        color: green;
+        margin-bottom: 20px;
+    }
+    .profile-card p {
+        font-size: 16px;
+        margin: 8px 0;
+    }
+    .logout-btn {
+        background: red;
+        color: white;
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .logout-btn:hover {
+        background: darkred;
+    }
+</style>
+</head>
+<body>
+<header>
+    <span class="menu-toggle" onclick="toggleSidebar()">&#9776;</span>
+    <h1>Uzhavar 2 Unavu</h1>
+</header>
+
+<aside id="sidebar">
+    <a href="index.html">
+        <img src="images/Farm.png" style="border-radius: 100%; width: 50px; height: 50px; margin-top: -50px;">
+    </a>
+    <hr style="border-top: 4px solid green;">
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="product.html">Products</a>
+        <a href="cart.html">Cart</a>
+        <a href="myorders.html">My Orders</a>
+        <a href="feedback.html">Feedback</a>
+        <a href="profile.html" class="active">Profile</a>
+        <a href="#" onclick="logoutUser()">Logout</a>
+    </nav>
+</aside>
+
+<main>
+    <div class="profile-card">
+        <h2>My Profile</h2>
+        <p><strong>Username:</strong> <span id="username"></span></p>
+        <p><strong>Password:</strong> <span id="password"></span></p>
+        <button class="logout-btn" onclick="logoutUser()">Logout</button>
+    </div>
+</main>
+
+<footer>
+    &copy; 2025 Uzhavar 2 Unavu
+</footer>
+
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+}
+
+function logoutUser() {
+    localStorage.removeItem("loggedInUser");
+    alert("You have been logged out.");
+    window.location.href = "index.html";
+}
+
+function loadProfile() {
+    let loggedInUser = localStorage.getItem("loggedInUser");
+    if (!loggedInUser) {
+        alert("Please login to view your profile.");
+        window.location.href = "index.html";
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    let user = users.find(u => u.username === loggedInUser);
+
+    if (user) {
+        document.getElementById("username").innerText = user.username;
+        document.getElementById("password").innerText = user.password;
+    } else {
+        document.getElementById("username").innerText = loggedInUser;
+        document.getElementById("password").innerText = "(Not Available)";
+    }
+}
+
+function loadProfile() {
+    let loggedInUser = localStorage.getItem("loggedInUser");
+    if (!loggedInUser) {
+        alert("Please login to view your profile.");
+        window.location.href = "index.html";
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    let user = users.find(u => u.username === loggedInUser);
+
+    if (user) {
+        document.getElementById("username").innerText = user.username;
+        document.getElementById("password").innerText = "******"; // Hide password
+    } else {
+        document.getElementById("username").innerText = loggedInUser;
+        document.getElementById("password").innerText = "******";
+    }
+}
+
+
+loadProfile();
+</script>
+</body>
+</html>

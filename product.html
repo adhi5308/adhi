@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Our Products</title>
+  <link rel="icon" type="image/x-icon" href="images/Farm 2.png">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: url(images/back6.jpg) center/cover no-repeat;
+    }
+    header {
+      background-color: green;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-weight: bold;
+      position: relative;
+    }
+    .menu-toggle {
+      font-size: 24px;
+      cursor: pointer;
+      position: absolute;
+      left: 15px;
+      top: 15px;
+    }
+    #sidebar {
+      position: fixed;
+      left: -200px;
+      top: 0;
+      height: 100%;
+      width: 200px;
+      background-color: #e6ffe6;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+      transition: left 0.3s ease;
+      padding-top: 60px;
+      z-index: 1000;
+    }
+    #sidebar nav {
+      display: flex;
+      flex-direction: column;
+    }
+    #sidebar nav a {
+      padding: 15px;
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+      border-left: 4px solid transparent;
+    }
+    #sidebar nav a:hover {
+      background-color: #d1ffd1;
+    }
+    #sidebar nav a.active {
+      background-color: #c1f0c1;
+      border-left: 4px solid green;
+    }
+    #sidebar.open { left: 0; }
+    .sort-buttons {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .sort-buttons button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .sort-buttons button:hover { background-color: #218838; }
+    main { flex: 1; padding-bottom: 40px; }
+    .product-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 0 20px 40px;
+    }
+    .product {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      width: 300px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .product:hover { transform: scale(1.02); }
+    .product img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .product-details {
+      padding: 15px;
+      text-align: center;
+    }
+    .product-details h3 { margin: 0; font-size: 20px; }
+    .product-details p { margin: 8px 0; color: #555; }
+    footer {
+      background-color: green;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      position: relative;
+      z-index: 1;
+    }
+    .sidebar-divider {
+      border: none;
+      border-top: 4px solid green;
+      margin: 10px 0;
+    }
+    .clear-btn {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin: 10px auto;
+      display: block;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .clear-btn:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="menu-toggle" onclick="toggleSidebar()">&#9776;</span>
+  <h1>Uzhavar 2 Unavu</h1>
+</header>
+
+<h1 style="text-align: center; color:white;">Our Products</h1>
+
+<aside id="sidebar">
+  <a href="index.html">
+    <img src="images/Farm.png" style="border-radius: 100%; width: 50px; height: 50px; margin-top: -50px;">
+  </a>
+  <hr class="sidebar-divider">
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="product.html" class="active">Products</a>
+    <a href="cart.html">Cart</a>
+    <a href="myorders.html">My Orders</a>
+    <a href="profile.html">Profile</a>
+    <a href="feedback.html">Feedback</a>
+    <a href="#" onclick="logoutUser()">Logout</a>
+  </nav>
+</aside>
+
+<main>
+  <div class="sort-buttons">
+    <button onclick="filterProducts('all')">All</button>
+    <button onclick="filterProducts('fruit')">Fruits</button>
+    <button onclick="filterProducts('vegetable')">Vegetables</button>
+    <button onclick="filterProducts('rice')">Rice</button>
+    <button onclick="filterProducts('nuts')">Dry fruits and Nuts</button>
+  </div>
+
+
+  <div class="product-grid" id="productGrid"></div>
+</main>
+
+<footer>
+  &copy; 2025 Uzhavar 2 Unavu
+</footer>
+
+<script>
+function filterProducts(type) {
+  const products = document.querySelectorAll('.product');
+  products.forEach(product => {
+    product.style.display = (type === 'all' || product.classList.contains(type)) ? 'block' : 'none';
+  });
+}
+
+function toggleSidebar() {
+  document.getElementById("sidebar").classList.toggle("open");
+}
+
+function addToCart(name, description, price, image) {
+  let loggedInUser = localStorage.getItem("loggedInUser");
+  if (!loggedInUser) {
+    alert("Please login first to add items to cart.");
+    window.location.href = "index.html";
+    return;
+  }
+
+  price = Number(price);
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  let existingIndex = cart.findIndex(item => item.name === name);
+  if (existingIndex !== -1) {
+    cart[existingIndex].qty += 1;
+  } else {
+    cart.push({ name, description, price, image, qty: 1 });
+  }
+  localStorage.setItem('cart', JSON.stringify(cart));
+  alert(`${name} added to cart!`);
+}
+
+function loadProducts(){
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+  let container = document.getElementById("productGrid");
+  container.innerHTML = "";
+  if(products.length === 0){
+    container.innerHTML = "<p style='text-align:center;color:white;'>No products available. Farmers can add products from the seller page.</p>";
+    return;
+  }
+  products.forEach(prod => {
+    container.innerHTML += `
+    <div class="product ${prod.category}">
+      <img src="${prod.image}" alt="${prod.name}">
+      <div class="product-details">
+        <h3>${prod.name}</h3>
+        <p>${prod.description}</p>
+        <p>Price: Rs.${prod.price}/kg</p>
+        <button onclick="addToCart('${prod.name}', '${prod.description}', ${prod.price}, '${prod.image}')">Add to Cart</button>
+      </div>
+    </div>`;
+  });
+}
+
+
+loadProducts();
+</script>
+
+</body>
+</html>

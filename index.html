@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uzhavar 2 Unavu</title>
+    <link rel="icon" type="image/x-icon" href="images/Farm 2.png">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-position: center;
+            background-repeat: no-repeat;
+            background: url(images/img.jpeg);
+            background-size: cover;
+
+        }
+        header, footer {
+            background-color: green;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+        main {
+            display: flex;
+            flex: 1;
+            transition: margin-left 0.3s ease;
+        }
+        aside {
+            background-color: #e6ffe6;
+            width: 200px;
+            padding: 1rem;
+        }
+        section {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    justify-content: center; /* Horizontal center */
+    align-items: center;     /* Vertical center */
+    flex-direction: column;  /* Keeps video and form stacked */
+}
+
+.video-container {
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 600px; /* Optional: keeps video from stretching too wide */
+}
+
+        .form-container {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            border-radius: 5px;
+            width: 300px;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 0.3rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 0.5rem;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: darkgreen;
+        }
+        .buttons{
+            border-radius: 20%;
+        }
+        /* Hamburger button */
+.menu-toggle {
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    left: 15px;
+    top: 15px;
+}
+
+/* Sidebar base style */
+#sidebar {
+    position: fixed;
+    left: -300px; /* Hidden off-screen */
+    top: 0;
+    height: 100%;
+    width: 200px;
+    background-color: #e6ffe6;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+    transition: left 0.3s ease;
+    padding-top: 60px; /* Space for header */
+}
+
+#sidebar nav {
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar nav a {
+    padding: 15px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    border-left: 4px solid transparent;
+}
+
+#sidebar nav a:hover {
+    background-color: #d1ffd1;
+}
+#sidebar nav a.active {
+    background-color: #c1f0c1;
+    border-left: 4px solid green;
+}
+
+
+
+/* Sidebar open state */
+#sidebar.open {
+    left: 0;
+}
+
+/* Push content right when sidebar opens */
+main.shift {
+    margin-left: 200px;
+}
+.sidebar-divider {
+    border: none;
+    border-top: 4px solid green; /* Bold green line */
+    margin: 10px 0;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+         <span class="menu-toggle" onclick="toggleSidebar()">&#9776;</span>
+        <h1>Uzhavar 2 Unavu</h1>
+    </header>
+    <main>
+        <aside id="sidebar" style="display:none;">
+    <a href="index.html">
+        <img src="images/Farm.png" style="border-radius: 100%; width: 50px; height: 50px; margin-top: -50px;">
+    </a>
+    <hr class="sidebar-divider">
+    <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="product.html">Products</a>
+        <a href="cart.html">Cart</a>
+        <a href="myorders.html">My Orders</a>
+        <a href="profile.html">Profile</a>
+        <a href="feedback.html">Feedback</a>
+        <button id="logoutBtn" style="
+            background-color: red; 
+            color: white; 
+            border: none; 
+            padding: 10px; 
+            margin: 10px 0; 
+            cursor: pointer; 
+            border-radius: 5px;
+        ">Logout</button>
+    </nav>
+</aside>
+
+        <section>
+            <div class="video-container">
+                <h2>Demo Video</h2>
+                <video width="100%" controls>
+                    <source src="demo.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="form-container">
+                <h2>Login / Register</h2>
+                <form>
+                    <input type="text" placeholder="Username" required>
+                    <input type="password" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                    <p style="padding-left: 23%;">if account doesn't exist.</p>
+                    <button type="button">Register</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Uzhavar 2 Unavu</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
