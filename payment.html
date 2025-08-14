@@ -31,8 +31,6 @@
 
 <div class="payment-option">
   <label><input type="radio" name="payment" value="upi"> UPI (Google Pay, PhonePe, Paytm)</label>
-  <label><input type="radio" name="payment" value="netbanking"> Net Banking</label>
-  <label><input type="radio" name="payment" value="card"> Credit / Debit Card</label>
   <label><input type="radio" name="payment" value="cod"> Cash on Delivery</label>
 </div>
 
@@ -85,57 +83,57 @@ function loadCartSummary() {
 }
 
 function placeOrder() {
-  let paymentMethod = document.querySelector('input[name="payment"]:checked');
-  if (!paymentMethod) {
-    alert("Please select a payment method.");
-    return; 
+    let paymentMethod = document.querySelector('input[name="payment"]:checked');
+    if (!paymentMethod) {
+        alert("Please select a payment method.");
+        return; 
+    }
 
-  }
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let total = cart.reduce((sum, item) => {
+        return sum + (parseFloat(item.price) || 0) * (parseInt(item.qty) || 1);
+    }, 0);
 
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  let total = cart.reduce((sum, item) => {
-    return sum + (parseFloat(item.price) || 0) * (parseInt(item.qty) || 1);
-  }, 0);
-
-  if (paymentMethod.value === "upi") {
-    if (!stepUPI) {
-      if (total <= 0) {
+    // ✅ Empty cart check for both payment types
+    if (total <= 0) {
         alert("Cart is empty or total is invalid.");
         return;
-      }
-      // Replace merchant@upi with your actual UPI ID
-      let upiLink = `upi://pay?pa=9095367000@fam&pn=Uzhavar%202%20Unavu&am=${total.toFixed(2)}&cu=INR`;
-      document.getElementById("qrSection").style.display = "block";
-      document.getElementById("qrcode").innerHTML = "";
-      new QRCode(document.getElementById("qrcode"), upiLink);
-      document.getElementById("proceedBtn").textContent = "Confirm Payment";
-      stepUPI = true;
-    } else {
-      alert("Payment confirmed! Order placed successfully.");
-      localStorage.removeItem('cart');
-      window.location.href = "index.html";
     }
-  } else {
-    alert(`Order placed successfully! Payment method: ${paymentMethod.value.toUpperCase()}`);
-    localStorage.removeItem('cart');
-    window.location.href = "index.html";
-  }
 
-  let loggedInUser = localStorage.getItem("loggedInUser");
-if (loggedInUser) {
-    let ordersKey = "orders_" + loggedInUser;
-    let existingOrders = JSON.parse(localStorage.getItem(ordersKey)) || [];
-
-    // Save the current order
-    existingOrders.push({
-        items: cart,
-        total: total,
-        date: new Date().toLocaleString()
-    });
-
-    localStorage.setItem(ordersKey, JSON.stringify(existingOrders));
+    if (paymentMethod.value === "upi") {
+        if (!stepUPI) {
+            let upiLink = `upi://pay?pa=9095367000@fam&pn=${encodeURIComponent('Uzhavar 2 Unavu')}&am=${total.toFixed(2)}&cu=INR`;
+            document.getElementById("qrSection").style.display = "block";
+            document.getElementById("qrcode").innerHTML = "";
+            new QRCode(document.getElementById("qrcode"), upiLink);
+            document.getElementById("proceedBtn").textContent = "Confirm Payment";
+            stepUPI = true;
+        } else {
+            alert("Payment confirmed! Order placed successfully.");
+            saveOrder(cart, total);
+            localStorage.removeItem('cart');
+            window.location.href = "index.html";
+        }
+    } else {
+        alert(`Order placed successfully! Payment method: ${paymentMethod.value.toUpperCase()}`);
+        saveOrder(cart, total);
+        localStorage.removeItem('cart');
+        window.location.href = "index.html";
+    }
 }
 
+function saveOrder(cart, total) {
+    let loggedInUser = localStorage.getItem("loggedInUser");
+    if (loggedInUser) {
+        let ordersKey = "orders_" + loggedInUser;
+        let existingOrders = JSON.parse(localStorage.getItem(ordersKey)) || [];
+        existingOrders.push({
+            items: cart,
+            total: total,
+            date: new Date().toLocaleString()
+        });
+        localStorage.setItem(ordersKey, JSON.stringify(existingOrders));
+    }
 }
 
 function cancelOrder() {
@@ -155,3 +153,4 @@ loadCartSummary();
 
 </body>
 </html>
+
