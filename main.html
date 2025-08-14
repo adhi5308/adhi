@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farmer Consumer Portal</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                    url('images/back.jpg') no-repeat center/cover;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: #fff;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 3rem;
+        margin-bottom: 40px;
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.7);
+    }
+
+    .btn-container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .portal-btn {
+        padding: 20px 40px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .consumer-btn {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .farmer-btn {
+        background-color: #FF9800;
+        color: white;
+    }
+
+    .portal-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 8px 20px rgba(0,0,0,0.4);
+    }
+
+    @media (max-width: 600px) {
+        h1 {
+            font-size: 2rem;
+        }
+        .portal-btn {
+            padding: 15px 30px;
+            font-size: 1rem;
+        }
+    }
+
+    a {
+    text-decoration: none; /* removes underline */
+    color: inherit; /* makes the text color match the button's text color */
+}
+
+</style>
+</head>
+<body>
+
+    <h1>Welcome to Uzhavan 2 Unavu</h1>
+    <div class="btn-container">
+        <button class="portal-btn consumer-btn">
+            <a href="index.html">
+            Consumer Portal
+            </a>
+        </button>
+        <button class="portal-btn farmer-btn">
+            <a href="seller.html">
+            Farmer Portal
+            </a>
+        </button>
+    </div>
+
+</body>
+</html>
