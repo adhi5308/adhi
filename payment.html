@@ -29,6 +29,22 @@
   <h2>Your Order</h2>
 </div>
 
+  <div class="delivery-details">
+  <h2>Delivery Details</h2>
+  <input type="text" id="fullName" placeholder="Full Name" required>
+  <input type="tel" id="phone" placeholder="Phone Number" required>
+  <textarea id="address" placeholder="Full Address" required></textarea>
+  <input type="text" id="city" placeholder="City" required>
+  <input type="text" id="pincode" placeholder="Pincode" required>
+  <label>Delivery Option:</label>
+  <select id="deliveryOption" required>
+    <option value="">Select</option>
+    <option value="Normal">Normal (3–5 days)</option>
+    <option value="Express">Express (1–2 days)</option>
+  </select>
+</div>
+
+
 <div class="payment-option">
   <label><input type="radio" name="payment" value="upi"> UPI (Google Pay, PhonePe, Paytm)</label>
   <label><input type="radio" name="payment" value="cod"> Cash on Delivery</label>
@@ -83,6 +99,19 @@ function loadCartSummary() {
 }
 
 function placeOrder() {
+
+  let name = document.getElementById("fullName").value.trim();
+let phone = document.getElementById("phone").value.trim();
+let address = document.getElementById("address").value.trim();
+let city = document.getElementById("city").value.trim();
+let pincode = document.getElementById("pincode").value.trim();
+let deliveryOption = document.getElementById("deliveryOption").value;
+
+if (!name || !phone || !address || !city || !pincode || !deliveryOption) {
+    alert("Please fill in all delivery details.");
+    return;
+}
+
     let paymentMethod = document.querySelector('input[name="payment"]:checked');
     if (!paymentMethod) {
         alert("Please select a payment method.");
@@ -131,6 +160,7 @@ function saveOrder(cart, total) {
             items: cart,
             total: total,
             date: new Date().toLocaleString()
+          delivery: { name, phone, address, city, pincode, option: deliveryOption }
         });
         localStorage.setItem(ordersKey, JSON.stringify(existingOrders));
     }
@@ -153,4 +183,5 @@ loadCartSummary();
 
 </body>
 </html>
+
 
