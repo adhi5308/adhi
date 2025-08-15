@@ -152,6 +152,10 @@ function loadOrders() {
             <div class="order">
                 <h3>Order #${index + 1} - ${order.date}</h3>
                 <p><strong>Total:</strong> ₹${order.total.toFixed(2)}</p>
+  <p><strong>Delivery To:</strong> ${order.delivery.name}, ${order.delivery.phone}</p>
+  <p><strong>Address:</strong> ${order.delivery.address}, ${order.delivery.city} - ${order.delivery.pincode}</p>
+  <p><strong>Delivery Option:</strong> ${order.delivery.option}</p>
+
         `;
 
         order.items.forEach(item => {
@@ -175,3 +179,4 @@ loadOrders();
 </script>
 </body>
 </html>
+
