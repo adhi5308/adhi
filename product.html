@@ -159,6 +159,16 @@
 </aside>
 
 <main>
+  <div style="text-align:center; margin:20px 0;">
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="Search for products..." 
+      onkeyup="searchProducts()" 
+      style="width:60%; padding:10px; border-radius:8px; border:2px solid green; font-size:16px;"
+    >
+  </div>
+  
   <div class="sort-buttons">
     <button onclick="filterProducts('all')">All</button>
     <button onclick="filterProducts('fruit')">Fruits</button>
@@ -176,6 +186,23 @@
 </footer>
 
 <script>
+
+  function searchProducts() {
+  let input = document.getElementById("searchInput").value.toLowerCase();
+  let products = document.querySelectorAll(".product");
+
+  products.forEach(product => {
+    let name = product.querySelector("h3").innerText.toLowerCase();
+    let desc = product.querySelector("p").innerText.toLowerCase();
+    if (name.includes(input) || desc.includes(input)) {
+      product.style.display = "block";
+    } else {
+      product.style.display = "none";
+    }
+  });
+}
+
+  
 function filterProducts(type) {
   const products = document.querySelectorAll('.product');
   products.forEach(product => {
@@ -235,3 +262,4 @@ loadProducts();
 
 </body>
 </html>
+
