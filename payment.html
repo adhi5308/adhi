@@ -129,29 +129,39 @@ if (!name || !phone || !address || !city || !pincode || !deliveryOption) {
         return;
     }
 
-    if (paymentMethod.value === "upi") {
-        if (!stepUPI) {
-            let upiLink = `upi://pay?pa=9095367000@fam&pn=${encodeURIComponent('Uzhavar 2 Unavu')}&am=${total.toFixed(2)}&cu=INR`;
-            document.getElementById("qrSection").style.display = "block";
-            document.getElementById("qrcode").innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), upiLink);
-            document.getElementById("proceedBtn").textContent = "Confirm Payment";
-            stepUPI = true;
-        } else {
-            alert("Payment confirmed! Order placed successfully.");
-            saveOrder(cart, total);
-            localStorage.removeItem('cart');
-            window.location.href = "index.html";
-        }
+    let deliveryDetails = {
+    name,
+    phone,
+    address,
+    city,
+    pincode,
+    option: deliveryOption
+};
+
+if (paymentMethod.value === "upi") {
+    if (!stepUPI) {
+        let upiLink = `upi://pay?pa=9095367000@fam&pn=${encodeURIComponent('Uzhavar 2 Unavu')}&am=${total.toFixed(2)}&cu=INR`;
+        document.getElementById("qrSection").style.display = "block";
+        document.getElementById("qrcode").innerHTML = "";
+        new QRCode(document.getElementById("qrcode"), upiLink);
+        document.getElementById("proceedBtn").textContent = "Confirm Payment";
+        stepUPI = true;
     } else {
-        alert(`Order placed successfully! Payment method: ${paymentMethod.value.toUpperCase()}`);
-        saveOrder(cart, total);
+        alert("Payment confirmed! Order placed successfully.");
+        saveOrder(cart, total, deliveryDetails);  // ✅ Pass delivery details
         localStorage.removeItem('cart');
         window.location.href = "index.html";
     }
+} else {
+    alert(`Order placed successfully! Payment method: ${paymentMethod.value.toUpperCase()}`);
+    saveOrder(cart, total, deliveryDetails);  // ✅ Pass delivery details
+    localStorage.removeItem('cart');
+    window.location.href = "index.html";
 }
 
-function saveOrder(cart, total) {
+}
+
+function saveOrder(cart, total, deliveryDetails) {
     let loggedInUser = localStorage.getItem("loggedInUser");
     if (loggedInUser) {
         let ordersKey = "orders_" + loggedInUser;
@@ -159,12 +169,13 @@ function saveOrder(cart, total) {
         existingOrders.push({
             items: cart,
             total: total,
-            date: new Date().toLocaleString()
-          delivery: { name, phone, address, city, pincode, option: deliveryOption }
+            date: new Date().toLocaleString(),
+            delivery: deliveryDetails
         });
         localStorage.setItem(ordersKey, JSON.stringify(existingOrders));
     }
 }
+
 
 function cancelOrder() {
   if (confirm("Are you sure you want to cancel the order?")) {
@@ -183,5 +194,6 @@ loadCartSummary();
 
 </body>
 </html>
+
 
 
